@@ -1,22 +1,9 @@
-use AdventureServices;
+USE AdventureServices;
 
--- Encriptar Password dos Utilizadores
+CREATE MASTER KEY ENCRYPTION 
+BY PASSWORD = 'EncryptionKey';
 
-SELECT * FROM sch_User.[User]
+CREATE CERTIFICATE EncryptCertificate
+WITH SUBJECT='Certificate_EncryptCertificate';
 
-SELECT HashBytes('SHA1', [Password])
-FROM sch_User.[User]
-GROUP BY UserKey, [Password]
 
-CREATE PROCEDURE sp_Encrypt_Users_Password
-AS
-	declare @passwordEncrypt VarBinary(256);
-	
-	IF((SELECT * FROM [sch_User].[User]) != 0)
-		BEGIN
-				
-			
-
-		END
-
-GO
