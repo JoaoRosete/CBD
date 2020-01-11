@@ -18,7 +18,8 @@ FROM INSERTED
 INSERT INTO [sch_User].sentEmails([Subject], UserKey) VALUES(@newPassword, @id)
 
 UPDATE [sch_User].[User]
-SET Password = @newPassword
+SET [Password] = @newPassword,
+	PasswordEncrypt = HASHBYTES('SHA1', @newPassword)
 WHERE UserKey = @id;
 
 END
