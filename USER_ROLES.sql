@@ -8,7 +8,6 @@ CREATE LOGIN login_Gestor_de_Marketing WITH PASSWORD = 'passGestor';
 GO
 CREATE LOGIN login_Utilizador_Anonimo WITH PASSWORD = 'passUtilizadorA';
 GO
--- Dúvidas
 CREATE LOGIN login_Utilizador_Registado WITH PASSWORD = 'passUtilizadorR';
 GO
 
@@ -45,6 +44,11 @@ CREATE ROLE role_view_products
 GRANT SELECT ON SCHEMA::[sch_Product] TO role_view_products
 EXEC sp_addrolemember 'role_view_products', 'user_Utilizador_Anonimo';
 
+CREATE ROLE role_view_customerInfo_and_salesInfo
+GRANT SELECT ON SCHEMA::[sch_Product] TO role_view_customerInfo_and_salesInfo
+GRANT SELECT ON SCHEMA::[sch_Customer] TO role_view_customerInfo_and_salesInfo
+GRANT SELECT ON OBJECT::[sch_Sales].Sales TO role_view_customerInfo_and_salesInfo
+EXEC sp_addrolemember 'role_view_customerInfo_and_salesInfo', 'user_Utilizador_Registado';
 
 
 -- Tests
@@ -52,8 +56,8 @@ EXEC sp_addrolemember 'role_view_products', 'user_Utilizador_Anonimo';
 	-- user_Administrador                   
 	EXECUTE AS USER = 'user_Administrador';
 	GO
-	SELECT * FROM  sch_Customer.Customer;
-	SELECT * FROM  sch_Product.Product;
+		SELECT * FROM  sch_Customer.Customer;
+		SELECT * FROM  sch_Product.Product;
 	GO
 	REVERT
 	GO
@@ -61,7 +65,10 @@ EXEC sp_addrolemember 'role_view_products', 'user_Utilizador_Anonimo';
 	-- user_Gestor_de_Marketing
 	EXECUTE AS USER = 'user_Gestor_de_Marketing';
 	GO 
-	SELECT * FROM sch_Sales.Promotion;
+		SELECT * FROM sch_Sales.Promotion;
+		
+		-- Not Permited
+		SELECT * FROM sch_Product.Product;
 	GO
 	REVERT
 	GO 
@@ -69,10 +76,26 @@ EXEC sp_addrolemember 'role_view_products', 'user_Utilizador_Anonimo';
 	-- user_Utilizador_Anonimo
 	EXECUTE AS USER = 'user_Utilizador_Anonimo'
 	GO 
-	SELECT * FROM sch_Product.Product
-	SELECT * FROM sch_Product.Description
+		SELECT * FROM sch_Product.Product
+		SELECT * FROM sch_Product.Description
+
+		-- Not Permited
+		SELECT * FROM sch_Customer.Customer
 	GO
 	REVERT 
+	GO
+
+	-- user_Utilizador_Registado
+	EXECUTE AS USER = 'user_Utilizador_Registado'
+	GO
+		SELECT * FROM sch_Customer.Customer;
+		SELECT * FROM sch_Product.Product;
+		SELECT * FROM sch_Sales.Sales;
+
+		-- Not Permited
+		SELECT * FROM sch_Sales.SalesOrder;
+	GO
+	REVERT
 	GO
 
 
