@@ -147,5 +147,42 @@ AS
 	INNER JOIN [sch_Product].ProductCategory AS pc ON psc.ProductCategoryKey = pc.ProductCategoryKey
 GO
 
+-------------------- Fase 2
+
+-- Volume de vendas por Produto
+CREATE VIEW [sch_Product].v_Volume_Sales_Per_Product
+AS
+	SELECT pn.EnglishProductName AS 'Product Name', (count(pn.EnglishProductName) * s.SalesAmount) AS 'Volume'
+	FROM [sch_Sales].Sales AS s
+	INNER JOIN [sch_Sales].SalesDetail AS sd ON sd.SalesKey = s.SalesKey
+	INNER JOIN [sch_Product].Product AS p ON sd.ProductKey = p.ProductKey
+	INNER JOIN [sch_Product].ProductName AS pn ON pn.ProductNameKey = p.ProductNameKey
+	GROUP BY pn.EnglishProductName, s.SalesAmount
+GO
+
+
+-- Percentagem de Vendas por Produto com Promotion 
+
+-- Valor Total de Vendas por Regiao Geografica
+CREATE VIEW [sch.Location].v_TotalValue_Anual_Per_Country
+AS 
+	SELECT result.YearSales AS YearSales , result.SalesTerritoryCountryName, ROUND(SUM(result.Sales), 2) AS Sales
+	FROM(
+		SELECT DISTINCT YEAR(s.OrderDate) AS YearSales , stc.SalesTerritoryCountryName , (count(p.ProductKey) * s.SalesAmount) AS 'Sales'
+		FROM [sch_Sales].SalesDetail AS sd
+		INNER JOIN [sch_Sales].Sales AS s ON sd.SalesKey = s.SalesKey
+		INNER JOIN [sch_Product].Product AS p ON sd.ProductKey = p.ProductKey
+		INNER JOIN [sch_Location].SalesTerritory AS st ON s.SalesTerritoryKey = st.SalesTerritoryKey
+		INNER JOIN [sch_Location].SalesTerritoryCountry AS stc ON st.SalesTerritoryCountryKey = stc.SalesTerritoryCountryKey
+		GROUP BY YEAR(s.OrderDate), stc.SalesTerritoryCountryName, s.SalesAmount
+	) AS result
+	GROUP BY result.YearSales, result.SalesTerritoryCountryName
+GO
+
+
+
+
+
+
 
 
