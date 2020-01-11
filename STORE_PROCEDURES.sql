@@ -1,31 +1,5 @@
 use AdventureServices
 
-CREATE PROCEDURE [sch_User].sp_recoverPassword(@UserKey INT, @Answer1 NVARCHAR(25), @Answer2 NVARCHAR(25), @Answer3 NVARCHAR(25))
-AS
-	DECLARE @newPassword NVARCHAR(10);
-	IF ((SELECT count(*) FROM [sch_User].AnsweredQuestions WHERE UserKey = @UserKey) >= 3)
-	BEGIN
-
-		IF(((SELECT count(*) FROM [sch_User].AnsweredQuestions WHERE Answer = @Answer1) = 1) 
-		AND ((SELECT count(*) FROM [sch_User].AnsweredQuestions WHERE Answer = @Answer2) = 1) 
-		AND ((SELECT count(*) FROM [sch_User].AnsweredQuestions WHERE Answer = @Answer3) = 1))
-		BEGIN
-			SELECT @newPassword = CONVERT(VARCHAR(10), CRYPT_GEN_RANDOM(5), 2)
-
-			INSERT INTO [sch_User].sentEmails([Subject], UserKey) VALUES(@newPassword, @UserKey)
-
-			UPDATE [sch_User].[User]
-			SET [Password] = @newPassword
-			WHERE UserKey = @UserKey;
-		END
-		ELSE
-		BEGIN
-			print 'Check The Answers!'
-		END
-
-	END
-GO
-
 CREATE PROCEDURE [sch_Product].sp_alterProductStatus(@ProductKey INT, @Status NVARCHAR(55))
 AS
 

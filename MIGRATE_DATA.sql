@@ -1,5 +1,8 @@
 use AdventureServices
-	
+
+	ALTER TABLE [sch_User].[User] ADD EmailEncrypt VARBINARY(256);
+	ALTER TABLE [sch_User].[User] ADD PasswordEncrypt VARBINARY(256);
+
 	INSERT INTO sch_User.[User](FirstName,LastName,EmailAddress, Password) values ('Joao', 'Rosete', 'rosete@gmail.com', 'rosete')
 	INSERT INTO sch_User.[User](FirstName,LastName,EmailAddress, Password) values ('Bruno', 'Paixao', 'Paixao@gmail.com', 'paixao')
 
