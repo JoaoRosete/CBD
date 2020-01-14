@@ -191,6 +191,7 @@ AS
 		GROUP BY YEAR(s.OrderDate), stc.SalesTerritoryCountryName, s.SalesAmount
 GO
 
+
 -- Prazo médio entre data de encomenda e envio por Região Geográfica
 CREATE VIEW [sch_Sales].v_AllPackages_In_TheLast2Years
 AS
