@@ -149,7 +149,7 @@ GO
 
 -------------------- Fase 2
 
--- Volume de vendas por Produto
+-- Volume de vendas por Produto 
 CREATE VIEW [sch_Product].v_Volume_Sales_Per_Product
 AS
 	SELECT pn.EnglishProductName AS 'Product Name', (count(pn.EnglishProductName) * s.SalesAmount) AS 'Volume'
@@ -160,11 +160,8 @@ AS
 	GROUP BY pn.EnglishProductName, s.SalesAmount
 GO
 
-
--- Percentagem de Vendas por Produto com Promotion 
-
--- Valor Total de Vendas por Regiao Geografica
-CREATE VIEW [sch.Location].v_TotalValue_Anual_Per_Country
+-- Calcular o valor total de vendas anual por Região Geográfica
+CREATE VIEW [sch_Sales].v_TotalValue_Anual_Per_Country
 AS 
 	SELECT result.YearSales AS YearSales , result.SalesTerritoryCountryName, ROUND(SUM(result.Sales), 2) AS Sales
 	FROM(
@@ -178,6 +175,34 @@ AS
 	) AS result
 	GROUP BY result.YearSales, result.SalesTerritoryCountryName
 GO
+
+-- Obter para cada ano a Região Geográfica com o maior valor total de vendas
+CREATE VIEW [sch_Sales].v_MaxTotalValue_Per_Country
+AS
+	SELECT YEAR(s.OrderDate) AS YearSales , stc.SalesTerritoryCountryName, ROUND((count(p.ProductKey) * s.SalesAmount),2 ) AS Sales
+		FROM [sch_Sales].SalesDetail AS sd
+		INNER JOIN [sch_Sales].Sales AS s ON sd.SalesKey = s.SalesKey
+		INNER JOIN [sch_Product].Product AS p ON sd.ProductKey = p.ProductKey
+		INNER JOIN [sch_Location].SalesTerritory AS st ON s.SalesTerritoryKey = st.SalesTerritoryKey
+		INNER JOIN [sch_Location].SalesTerritoryCountry AS stc ON st.SalesTerritoryCountryKey = stc.SalesTerritoryCountryKey
+		WHERE  s.SalesAmount in (SELECT MAX(SalesAmount) FROM sch_sales.Sales as s INNER JOIN [sch_Location].SalesTerritory AS st ON s.SalesTerritoryKey = st.SalesTerritoryKey
+		INNER JOIN [sch_Location].SalesTerritoryCountry AS stc ON st.SalesTerritoryCountryKey = stc.SalesTerritoryCountryKey 
+		group by stc.SalesTerritoryCountryName)
+		GROUP BY YEAR(s.OrderDate), stc.SalesTerritoryCountryName, s.SalesAmount
+GO
+
+-- Prazo médio entre data de encomenda e envio por Região Geográfica
+CREATE VIEW [sch_Sales].v_AllPackages_In_TheLast2Years
+AS
+	SELECT  c.SalesTerritoryCountryName, CAST(AVG(CAST(DATEDIFF(DAY, s.OrderDate, s.ShipDate) AS DECIMAL(18,2))) AS DECIMAL(18,2)) AS 'Average'
+	FROM sch_Sales.Sales AS s
+	INNER JOIN [sch_Location].SalesTerritory AS st ON s.SalesTerritoryKey = st.SalesTerritoryKey
+	INNER JOIN [sch_Location].SalesTerritoryCountry AS c ON st.SalesTerritoryCountryKey = c.SalesTerritoryCountryKey
+	GROUP BY c.SalesTerritoryCountryName
+GO
+
+
+
 
 
 
