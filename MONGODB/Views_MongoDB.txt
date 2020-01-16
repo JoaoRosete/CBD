@@ -1,0 +1,16 @@
+1. Listar o modelo e categoria do produto com os respetivos comentários
+    db.Product.find({}, { _id: 0, Nome: 1, Categoria:1 , Customer_Comment: 1})
+
+2. Listar os produtos de uma determinada categoria
+    db.Product.find({ Categoria: 'Bikes'})
+
+3. Listar os comentários de um dado utilizador
+    
+
+4. Listar os produtos que não têm comentários
+5. Obter o nº de comentários por cliente
+6. Obter a classificação média por produto
+7. Adicionar um comentário a um determinado produto
+8. Remover os comentários de um dado utilizador
+9. Obter a média de classificações dos clientes por País (Nome País, Média das
+Classificações). 
