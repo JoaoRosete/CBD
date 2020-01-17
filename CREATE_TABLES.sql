@@ -45,6 +45,7 @@ CREATE TABLE sch_User.[User](
 	EmailAddress NVARCHAR(55) NOT NULL,
 	Password NVARCHAR(55) NOT NULL,
 	PasswordEncrypt VarBinary(256),
+	EmailEncrypt VARBINARY(256)
 ) ON FG_User
 
 CREATE TABLE sch_User.AnsweredQuestions(

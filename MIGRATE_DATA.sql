@@ -1,8 +1,5 @@
 use AdventureServices
 
-	ALTER TABLE [sch_User].[User] ADD EmailEncrypt VARBINARY(256);
-	ALTER TABLE [sch_User].[User] ADD PasswordEncrypt VARBINARY(256);
-
 	INSERT INTO sch_User.[User](FirstName,LastName,EmailAddress, Password) values ('Joao', 'Rosete', 'rosete@gmail.com', 'rosete')
 	INSERT INTO sch_User.[User](FirstName,LastName,EmailAddress, Password) values ('Bruno', 'Paixao', 'Paixao@gmail.com', 'paixao')
 
@@ -285,14 +282,4 @@ use AdventureServices
 	LEFT JOIN [AdventureServices].[sch_Location].SalesTerritory AS newST ON newST.SalesTerritoryRegion =  oldT.SalesTerritoryRegion
 	LEFT JOIN [AdventureServices].[sch_Sales].Sales AS newS on newS.SalesOrderKey = newSO.SalesOrderKey AND newS.CustomerKey = oldT.CustomerKey AND newS.CurrencyKey = oldT.CurrencyKey AND newS.SalesTerritoryKey = newST.SalesTerritoryKey
 	ORDER BY  newP.ProductKey
-	
-	--select count(*) from  AdventureServicesOLD.dbo.Sales WHERE ProductKey = '214'
-	
-
-	--SELECT DISTINCT newP.ProductKey, newS.SalesKey, oldT.OrderQuantity, convert(float, replace(oldT.UnitPrice, ',','.')) 
-	--FROM AdventureServicesOLD.dbo.Sales oldT
-	--LEFT JOIN [AdventureServices].[sch_Product].Product AS newP ON newP.ProductKey = oldT.ProductKey
-	--LEFT JOIN [AdventureServices].[sch_Customer].Customer AS newC on newC.CustomerKey = oldT.CustomerKey
-	--LEFT JOIN [AdventureServices].[sch_Sales].Sales AS newS on newS.CustomerKey = newC.CustomerKey
-	--ORDER BY  newP.ProductKey
 

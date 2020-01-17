@@ -1,6 +1,5 @@
 use AdventureServices
 
-
 -- Prazo médio entre data de encomenda e envio por Região Geográfica(Index)
 DROP INDEX [v_AllPackages_In_TheLast2Years_INDEX] ON [sch_Sales].[Sales]
 CREATE NONCLUSTERED INDEX [v_AllPackages_In_TheLast2Years_INDEX] ON [sch_Sales].[Sales] (

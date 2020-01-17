@@ -1,16 +1,20 @@
 1. Listar o modelo e categoria do produto com os respetivos comentários
-    db.Product.find({}, { _id: 0, Nome: 1, Categoria:1 , Customer_Comment: 1})
+    db.Product.find({}, { Nome: 1, Categoria:1 , Customer_Comment: 1})
 
 2. Listar os produtos de uma determinada categoria
     db.Product.find({ Categoria: 'Bikes'})
 
-3. Listar os comentários de um dado utilizador
-    
+3. Listar os comentários de um dado utilizador   
+	db.Product.find({ "Customer_Comment.CustomerKey": 11000 })
 
 4. Listar os produtos que não têm comentários
-5. Obter o nº de comentários por cliente
+    db.Product.find( { Customer_Comment : { $exists: false } })
+
 6. Obter a classificação média por produto
+    db.Product.aggregate([{$unwind:"$Customer_Comment.Rate"}, {$group: { _id:"$_id", Rate: {$avg:"$Customer_Comment.Rate"}}}])
+
 7. Adicionar um comentário a um determinado produto
+   db.Product.update({Nome: "HL Road Frame - Red, 62"}, {$push: { Customer_Comment:[{ CustomerKey: 11000, 'Email': 'jon24@adventure-works.com', 'Comment': 'Nada de especial', 'Rate': 1, Date: '02-10-2019' }] } })
+
 8. Remover os comentários de um dado utilizador
-9. Obter a média de classificações dos clientes por País (Nome País, Média das
-Classificações). 
+    db.Product.update({Nome: "HL Road Frame - Red, 62"}, {$unset: { Customer_Comment: [] } })
